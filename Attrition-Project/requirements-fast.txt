@@ -1,4 +1,0 @@
-# Optional Unix accelerator, not needed to run the app or standard reproduction.
-# Build against the installed NumPy with a working C++/OpenMP compiler, e.g.:
-# CC=gcc CXX=g++ python -m pip install --no-build-isolation --no-deps fasttreeshap==0.1.6
-fasttreeshap==0.1.6
