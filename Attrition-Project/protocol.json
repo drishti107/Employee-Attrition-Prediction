@@ -1,0 +1,29 @@
+{
+  "version": "2.0",
+  "seed": 42,
+  "outer_folds": 5,
+  "outer_repeats": 5,
+  "inner_folds": 5,
+  "dataset_sha256": "a5c31e38bd7fafc9bc333884eb181b06b41b8e5e488e8f7ccb27199fb3be7659",
+  "comparison_modes": [
+    "raw",
+    "all",
+    "no_log"
+  ],
+  "primary_comparison": "all (27 original + 8 engineered) versus raw for each of three families",
+  "production_comparison": "no_log (27 original + 7 engineered) versus raw for each family",
+  "selection": "Highest mean outer AP among raw and no_log across three families; lower mean Brier then key breaks exact ties. The eight-feature arm is a research comparator; excluded from deployment to remove redundant log-income attribution.",
+  "ablation": "Four logistic without_BLOCK modes remove the named block from no_log; originals retained. Age added to logistic no_log as sensitivity analysis only.",
+  "tuning": "Original eight-point grid per family, inner five-fold AP; all learned transformations inside pipeline.",
+  "calibration": "After training-only tuning, cross_val_predict chosen pipeline on five training folds; fit sigmoid to OOF scores. Hyperparameter selection and sigmoid fitting share outer-training data, never outer-test data.",
+  "threshold": "Maximize F1 on calibrated outer-training OOF scores over 0.05..0.80 step0.005; larger wins ties. Final fit repeats this on all development data. No outer labels used in a fold threshold.",
+  "inference": "Paired Nadeau-Bengio corrected t intervals: SE=sqrt((1/25+294/1176)*sample_variance), df24. Two-sided p-values; Holm over three AP family comparisons within each feature specification. Approximate dependent-CV inference, not independent replication.",
+  "interpretability": "Every outer held-out row: K80 and top-three Jaccard for logistic and forest in raw/all/no_log; 50 stratified training bootstrap refits per outer fold, parameters fixed. TreeSHAP explains uncalibrated base forest probability; linear explains calibrated log-odds. Group calibrated-probability explanations remain separate.",
+  "interpretability_intervals": "Paired bootstrap of five repeat-level averages (10000 resamples); descriptive conditional repeat variability, not population-level CIs. Row observations across repeats are not independent.",
+  "ranking_crosscheck": "Spearman of held-out mean absolute attribution ranks versus five-shuffle AP permutation importance on the same transformed source attributes; recombine one-hot levels. Engineered-column permutation is a representation-level diagnostic and may create inconsistent combinations.",
+  "calibration_bins": 10,
+  "bootstrap_refits": 50,
+  "example_employee_id": 478,
+  "example_policy": "Reuse prior illustrative employee 478; first repeat held-out fitted models; chosen previously for high risk, not representative.",
+  "limitations": "Exploratory upgrade on previously examined fictional data. Winner chosen across outer-CV results, so selected-winner score may be optimistic; no new independent or temporal test. No human comprehension study performed."
+}
